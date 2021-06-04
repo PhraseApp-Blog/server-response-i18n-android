@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">paws</string>
+    <string name="enter_dog_breed">Enter dog breed</string>
+    <string name="fetch">Fetch!</string>
 </resources>

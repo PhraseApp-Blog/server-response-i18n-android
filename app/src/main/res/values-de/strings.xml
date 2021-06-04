@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">paws</string>
+    <string name="enter_dog_breed">Gib die Hunderasse ein</string>
+    <string name="fetch">"Hol! "</string>
+</resources>
