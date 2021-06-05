@@ -17,9 +17,8 @@ class GetDogs(private val retrofitService: RetrofitService) {
             emit(ResultWrapper.Success(dogs.message, dogs.status))
         } catch (throwable: Throwable) {
             when (throwable) {
-                is IOException -> emit(ResultWrapper.GenericError("No Internet Connection. Please try again"))
+                is IOException -> emit(ResultWrapper.GenericError("No internet connection. Please try again"))
                 is HttpException -> {
-                    val code = throwable.code()
                     val errorResponse = convertErrorBody(throwable)
                     emit(errorResponse)
                 }

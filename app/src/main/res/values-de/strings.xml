@@ -3,4 +3,8 @@
     <string name="app_name">paws</string>
     <string name="enter_dog_breed">Gib die Hunderasse ein</string>
     <string name="fetch">"Hol! "</string>
+
+    <string name="error_no_internet">Keine Internetverbindung. Bitte versuche es erneut.</string>
+    <string name="error_breed_not_found">Hunderasse nicht gefunden.</string>
+    <string name="success_status">Erfolgreich abgerufen</string>
 </resources>

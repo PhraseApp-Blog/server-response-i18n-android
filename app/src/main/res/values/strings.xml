@@ -2,4 +2,8 @@
     <string name="app_name">paws</string>
     <string name="enter_dog_breed">Enter dog breed</string>
     <string name="fetch">Fetch!</string>
+
+    <string name="error_no_internet">No internet connection. Please try again.</string>
+    <string name="error_breed_not_found">Dog breed not found.</string>
+    <string name="success_status">Successfully retrieved</string>
 </resources>
