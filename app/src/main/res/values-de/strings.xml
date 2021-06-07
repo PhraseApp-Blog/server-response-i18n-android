@@ -7,4 +7,6 @@
     <string name="error_no_internet">Keine Internetverbindung. Bitte versuche es erneut.</string>
     <string name="error_breed_not_found">Hunderasse nicht gefunden.</string>
     <string name="success_status">Erfolgreich abgerufen</string>
+    <string name="error_generic">Something went wrong. itte versuche es erneut.</string>
+
 </resources>

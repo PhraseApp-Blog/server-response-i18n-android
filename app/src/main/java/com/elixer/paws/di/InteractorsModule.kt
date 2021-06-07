@@ -1,7 +1,7 @@
 package com.elixer.paws.di
 
 import com.elixer.paws.RetrofitService
-import com.elixer.paws.interacters.GetDogs
+import com.elixer.paws.interactors.GetDogs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

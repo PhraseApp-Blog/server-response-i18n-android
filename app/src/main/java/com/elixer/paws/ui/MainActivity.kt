@@ -18,10 +18,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        button.setOnClickListener(){
-            viewModel.loadMore(edittext_breed.text.toString())
+        button.setOnClickListener() {
+            viewModel.loadImage(edittext_breed.text.toString())
             try {
-                val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm: InputMethodManager =
+                    getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
             } catch (e: Exception) {
             }
@@ -39,8 +40,12 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.status.observe(this, { status ->
-            textview_status.text = status
+//        viewModel.status.observe(this, { status ->
+//            textview_status.text = status
+//        })
+
+        viewModel.statusResourceId.observe(this, { statusResourceId ->
+            textview_status.text = statusResourceId?.let { getString(it) }
         })
         viewModel.loading.observe(this, { isLoading ->
             progressBar.visibility = if (isLoading) View.VISIBLE else View.INVISIBLE

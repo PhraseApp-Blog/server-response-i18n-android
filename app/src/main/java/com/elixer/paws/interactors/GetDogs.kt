@@ -1,6 +1,8 @@
-package com.elixer.paws.interacters
+package com.elixer.paws.interactors
 
 import com.elixer.paws.DogResponse
+import com.elixer.paws.ErrorMapper
+import com.elixer.paws.ErrorMapper.Companion.INTERNET_CONNECTION_ERROR
 import com.elixer.paws.RetrofitService
 import com.elixer.paws.ui.ResultWrapper
 import com.google.gson.Gson
@@ -14,16 +16,19 @@ class GetDogs(private val retrofitService: RetrofitService) {
     fun execute(breed: String): Flow<ResultWrapper<String>> = flow {
         try {
             val dogs = getDogsFromNetwork(breed)
-            emit(ResultWrapper.Success(dogs.message, dogs.status))
+            //Get resource id for a 200 success response
+            emit(ResultWrapper.Success(dogs.message,statusResourceId = ErrorMapper.mapOf(200)))
         } catch (throwable: Throwable) {
             when (throwable) {
-                is IOException -> emit(ResultWrapper.GenericError("No internet connection. Please try again"))
+                is IOException -> emit(
+                    //Get resource id for no internet connection
+                    ResultWrapper.GenericError(statusResourceId = ErrorMapper.mapOf(INTERNET_CONNECTION_ERROR)))
                 is HttpException -> {
                     val errorResponse = convertErrorBody(throwable)
                     emit(errorResponse)
                 }
                 else -> {
-                    ResultWrapper.GenericError("Something went wrong")
+                    returnGenericStatusError()
                 }
             }
         }
@@ -33,12 +38,15 @@ class GetDogs(private val retrofitService: RetrofitService) {
         return try {
             throwable.response()?.errorBody()?.let {
                 val errorResponse = Gson().fromJson(it.charStream(), DogResponse::class.java)
-                return ResultWrapper.GenericError(errorResponse.message)
-            } ?: ResultWrapper.GenericError("Something went wrong")
+                //Get resource id for the "code" value in error Response from the server
+                return ResultWrapper.GenericError(ErrorMapper.mapOf(errorResponse.code))
+            } ?: returnGenericStatusError()
         } catch (exception: Exception) {
-            return ResultWrapper.GenericError("Something went wrong")
+            return returnGenericStatusError()
         }
     }
+
+    private fun returnGenericStatusError() = ResultWrapper.GenericError(ErrorMapper.mapOf(0))
 
     private suspend fun getDogsFromNetwork(breed: String): DogResponse {
         val dogArray = retrofitService.getDog(breed)
