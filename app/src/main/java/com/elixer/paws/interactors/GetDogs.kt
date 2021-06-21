@@ -1,8 +1,8 @@
 package com.elixer.paws.interactors
 
 import com.elixer.paws.DogResponse
-import com.elixer.paws.ErrorMessages
-import com.elixer.paws.ErrorMessages.Companion.INTERNET_CONNECTION_ERROR
+import com.elixer.paws.StatusMessages
+import com.elixer.paws.StatusMessages.Companion.INTERNET_CONNECTION_ERROR
 import com.elixer.paws.RetrofitService
 import com.elixer.paws.ui.ResultWrapper
 import com.google.gson.Gson
@@ -21,7 +21,7 @@ class GetDogs(private val retrofitService: RetrofitService) {
         emit(
           ResultWrapper.Success(
             dogs.message,
-            statusResourceId = ErrorMessages.resourceIdFor(
+            statusResourceId = StatusMessages.resourceIdFor(
               200
             )
           )
@@ -31,7 +31,7 @@ class GetDogs(private val retrofitService: RetrofitService) {
           is IOException -> emit(
             //Get resource id for no internet connection
             ResultWrapper.GenericError(
-              statusResourceId = ErrorMessages.resourceIdFor(
+              statusResourceId = StatusMessages.resourceIdFor(
                 INTERNET_CONNECTION_ERROR
               )
             )
@@ -56,7 +56,7 @@ class GetDogs(private val retrofitService: RetrofitService) {
         )
         //Get resource id for the "code" value in error Response from the server
         return ResultWrapper.GenericError(
-          ErrorMessages.resourceIdFor(
+          StatusMessages.resourceIdFor(
             errorResponse.code
           )
         )
@@ -67,7 +67,7 @@ class GetDogs(private val retrofitService: RetrofitService) {
   }
 
   private fun returnGenericStatusError() =
-    ResultWrapper.GenericError(ErrorMessages.resourceIdFor(0))
+    ResultWrapper.GenericError(StatusMessages.resourceIdFor(0))
 
   private suspend fun getDogsFromNetwork(breed: String): DogResponse {
     val dogArray = retrofitService.getDog(breed)

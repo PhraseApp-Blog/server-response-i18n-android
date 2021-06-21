@@ -1,6 +1,6 @@
 package com.elixer.paws
 
-internal class ErrorMessages {
+internal class StatusMessages {
 
   companion object {
     const val INTERNET_CONNECTION_ERROR = -1
