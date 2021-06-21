@@ -11,38 +11,52 @@ import java.io.IOException
 
 class GetDogs(private val retrofitService: RetrofitService) {
 
-    fun execute(breed: String): Flow<ResultWrapper<String>> = flow {
-        try {
-            val dogs = getDogsFromNetwork(breed)
-            emit(ResultWrapper.Success(dogs.message, dogs.status))
-        } catch (throwable: Throwable) {
-            when (throwable) {
-                is IOException -> emit(ResultWrapper.GenericError("No Internet Connection. Please try again"))
-                is HttpException -> {
-                    val code = throwable.code()
-                    val errorResponse = convertErrorBody(throwable)
-                    emit(errorResponse)
-                }
-                else -> {
-                    ResultWrapper.GenericError("Something went wrong")
-                }
-            }
+  fun execute(breed: String): Flow<ResultWrapper<String>> =
+    flow {
+      try {
+        val dogs = getDogsFromNetwork(breed)
+        emit(
+          ResultWrapper.Success(
+            dogs.message,
+            dogs.status
+          )
+        )
+      } catch (throwable: Throwable) {
+        when (throwable) {
+          is IOException -> emit(
+            ResultWrapper.GenericError(
+              "No Internet Connection. Please try again"
+            )
+          )
+          is HttpException -> {
+            val code = throwable.code()
+            val errorResponse = convertErrorBody(throwable)
+            emit(errorResponse)
+          }
+          else -> {
+            ResultWrapper.GenericError("Something went wrong")
+          }
         }
+      }
     }
 
-    private fun convertErrorBody(throwable: HttpException): ResultWrapper.GenericError {
-        return try {
-            throwable.response()?.errorBody()?.let {
-                val errorResponse = Gson().fromJson(it.charStream(), DogResponse::class.java)
-                return ResultWrapper.GenericError(errorResponse.message)
-            } ?: ResultWrapper.GenericError("Something went wrong")
-        } catch (exception: Exception) {
-            return ResultWrapper.GenericError("Something went wrong")
-        }
+  private fun convertErrorBody(throwable: HttpException): ResultWrapper.GenericError {
+    return try {
+      throwable.response()?.errorBody()?.let {
+        val errorResponse = Gson().fromJson(
+          it.charStream(),
+          DogResponse::class.java
+        )
+        return ResultWrapper.GenericError(errorResponse.message)
+      }
+        ?: ResultWrapper.GenericError("Something went wrong")
+    } catch (exception: Exception) {
+      return ResultWrapper.GenericError("Something went wrong")
     }
+  }
 
-    private suspend fun getDogsFromNetwork(breed: String): DogResponse {
-        val dogArray = retrofitService.getDog(breed)
-        return dogArray
-    }
+  private suspend fun getDogsFromNetwork(breed: String): DogResponse {
+    val dogArray = retrofitService.getDog(breed)
+    return dogArray
+  }
 }
